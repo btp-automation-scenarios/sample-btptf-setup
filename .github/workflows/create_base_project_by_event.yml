@@ -1,28 +1,8 @@
-name: Basis Subaccount via Terraform
+name: Basis Subaccount via Terraform (Event Driven)
 
 on:
-  workflow_dispatch:
-    inputs:
-      PROJECT_NAME:
-        description: "Name of the project"
-        required: true
-      REGION:
-        description: "Region for the sub account"
-        default: "eu10"
-        required: true
-      COST_CENTER:
-        description: "Cost center for the project"
-        default: "1234567890"
-        required: true
-      STAGE:
-        description: "Stage for the project"
-        default: "DEV"
-        required: true
-      ORGANIZATION:
-        description: "Organization for the project"
-        default: "B2C"
-        required: true
-
+  repository_dispatch:
+    types: [triggerTerraformSetup]
 env:
   PATH_TO_TFSCRIPT: 'infra'
 
@@ -32,11 +12,11 @@ jobs:
     name: BTP Subaccount Setup
     runs-on: ubuntu-latest
     env:
-      PARAM_PROJECT_NAME: ${{ github.event.inputs.PROJECT_NAME }}
-      PARAM_REGION: ${{ github.event.inputs.REGION }}
-      PARAM_COST_CENTER: ${{ github.event.inputs.COST_CENTER }}
-      PARAM_STAGE: ${{ github.event.inputs.STAGE }}
-      PARAM_ORGANIZATION: ${{ github.event.inputs.ORGANIZATION }}
+      PARAM_PROJECT_NAME: ${{ github.event.client_payload.PROJECT_NAME }}
+      PARAM_REGION: ${{ github.event.client_payload.REGION }}
+      PARAM_COST_CENTER: ${{ github.event.client_payload.COST_CENTER }}
+      PARAM_STAGE: ${{ github.event.client_payload.STAGE }}
+      PARAM_ORGANIZATION: ${{ github.event.client_payload.ORGANIZATION }}
 
     steps:
     - name: Check out Git repository
